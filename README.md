@@ -4,7 +4,7 @@ The H2020-PHYSICS Application Metamodel/Ontology.
 
 Links:
 
-- [**Visual** walkthrough via **WebVOWL**!!!][webvowl-showcase]
+- [**Visual** walkthrough via **WebVOWL**!!!][webvowl-showcase] [(alternative)][webvowl-showcase-2]
 - [View the ontology **file**][main-file]
 
 ## Domain of Ontology
