@@ -24,11 +24,16 @@ Similarly, the interfaces between applications, and/or their components, are enc
 
 This overall class structure is the core of the PHYSICS Application ontology, and is meant to be able to describe the overall characteristics and structure of an application. It is also the skeleton upon which different properties are based, in order to be able to create descriptions that can be processed by the combination of OWL reasoning, custom rules reasoning, and further AI-based decision-making and optimization processes of the PHYSICS platform, so as to make optimal placements and deployments on the continuum.
 
-The current version of **the complete PHYSICS ontology can be viewed and explored, as a visual graph, via web browser, [through here][webvowl-showcase]**! Following is a preview of the ontology, as viewed through WebVOWL:
+The current version of **the complete PHYSICS ontology can be viewed and explored, as a visual graph, via web browser, [through here][webvowl-showcase]** or [here][webvowl-showcase-2]! Following is a preview of the ontology, as viewed through WebVOWL:
 
 ![webvowl-example](figures/webvowl.png)
 
 The extensions of the ontology provide connections between the Core Ontology Classes and other related domains, in order to enable the matching of an Application with the Resources it can or will be deployed on, through reasoning and optimization processes.
+
+*Note 1: The ontology is made so that different subsets of terms and relationships are used for different operations.*
+
+*Note 2: It is expected that this ontology will be combined with / connected to a specialized resource description ontology, from the same project.*
+
 
 ## External Ontologies included
 
@@ -36,8 +41,17 @@ The extensions of the ontology provide connections between the Core Ontology Cla
 - The [Informatics Research Artifacts Ontology (irao)][irao]: Imported the **'Benchmark'** definition.
 - May or may not be introduced in the future: [Wfprov ontology][wfprov].
 
+## Ontology Metrics
+
+For the current version:
+Attribute richness (AR), according to ["OntoQA: Metric-Based Ontology Quality Analysis"][ontoqa] and ["Ontological Evaluation and Validation"][onto2], is the ratio of the total number of attributes to the total number of classes, and is an indication of how rich the class description is, and generally a higher number indicates more compressed information, with resulting in a lower number of triplets needed for the same amount of knowledge. In our case, the resulting AR is **0.85**. The Relationship Richness (RR) metric, as mentioned in ["Ontological Evaluation and Validation"][onto2], should be the ratio of non-inheritance relationships to total relationships, the value in our case being **0.42**. Higher numbers on this metric generally indicate a diversity in relationships and an increased order of expressed detail. The descriptive logic complexity of the ontology is SROIQ (D), the maximum of OWL2 (DL).
+
+
 [webvowl-showcase]: https://service.tib.eu/webvowl/#iri=https://drive.google.com/u/0/uc?id=1-9dnKP3Qr0oa9dEarp-hH2QfYvbXuDN4&export=download
+[webvowl-showcase-2]: http://vowl.visualdataweb.org/webvowl-old/webvowl-old.html#iri=https://drive.google.com/u/0/uc?id=1-9dnKP3Qr0oa9dEarp-hH2QfYvbXuDN4&export=download
 [irao]: http://ontology.ethereal.cz/irao
 [wfdesc]: http://purl.org/wf4ever/wfdesc
 [wfprov]: http://purl.org/wf4ever/wfprov
 [main-file]: PHYSICS_ONTOLOGY.ttl
+[ontoqa]: https://www.researchgate.net/publication/266795541_OntoQA_Metric-Based_Ontology_Quality_Analysis
+[onto2]: https://www.researchgate.net/publication/226387227_Ontological_Evaluation_and_Validation
