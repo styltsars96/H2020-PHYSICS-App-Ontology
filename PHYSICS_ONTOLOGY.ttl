@@ -17,6 +17,18 @@
 #    Datatypes
 #################################################################
 
+###  http://www.physics-h2020.eu/physics/classificationGrade
+:classificationGrade rdf:type rdfs:Datatype ;
+                     rdfs:comment """A string. It is the classification label that denotes a grade, e.g. of resource requirements.
+Possible values:
+- \"low\"
+- \"medium\"
+- \"high\"
+- \"very high\"""" ;
+                     rdfs:label "physics:classificationGrade" ;
+                     owl:equivalentClass xsd:string .
+
+
 ###  http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON
 rdf:JSON rdf:type rdfs:Datatype .
 
@@ -558,11 +570,64 @@ This performance profile is the result of the LATEST BENCHMARK, for A SPECIFIC L
 #    Data properties
 #################################################################
 
+###  http://www.physics-h2020.eu/physics/achievedAverageRate
+:achievedAverageRate rdf:type owl:DatatypeProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :LoadGenerationData ;
+                     rdfs:range xsd:float ,
+                                xsd:integer ;
+                     rdfs:label "Achieved Average Rate" .
+
+
 ###  http://www.physics-h2020.eu/physics/allowsUpload
 :allowsUpload rdf:type owl:DatatypeProperty ;
               rdfs:domain :REST ;
               rdfs:range xsd:boolean ;
               rdfs:label "REST API allows Upload"@en .
+
+
+###  http://www.physics-h2020.eu/physics/averageDuration
+:averageDuration rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:float ,
+                            xsd:integer ;
+                 rdfs:label "Average Duration" .
+
+
+###  http://www.physics-h2020.eu/physics/averageInitTime
+:averageInitTime rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:float ;
+                 rdfs:label "Average Initialization Time" .
+
+
+###  http://www.physics-h2020.eu/physics/averageStartLatency
+:averageStartLatency rdf:type owl:DatatypeProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :LoadGenerationData ;
+                     rdfs:range xsd:float ,
+                                xsd:integer ;
+                     rdfs:label "Average Start Latency" .
+
+
+###  http://www.physics-h2020.eu/physics/averageUserSideDelay
+:averageUserSideDelay rdf:type owl:DatatypeProperty ,
+                               owl:FunctionalProperty ;
+                      rdfs:domain :LoadGenerationData ;
+                      rdfs:range xsd:float ,
+                                 xsd:integer ;
+                      rdfs:label "Average User Side Delay" .
+
+
+###  http://www.physics-h2020.eu/physics/averageWaitTime
+:averageWaitTime rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:float ,
+                            xsd:integer ;
+                 rdfs:label "Average Wait Time" .
 
 
 ###  http://www.physics-h2020.eu/physics/benchmarkTimestamp
@@ -591,6 +656,14 @@ Examples include:
 - Importing a Software Library, or even Framework, as a single symbol/keyword in code.
 - References to other files or URIs or entire entities through code."""@en ;
             rdfs:label "Instance is represented as Symbol in Code"@en .
+
+
+###  http://www.physics-h2020.eu/physics/cpu
+:cpu rdf:type owl:DatatypeProperty ,
+              owl:FunctionalProperty ;
+     rdfs:domain :ResourceRequirementsClassification ;
+     rdfs:range :classificationGrade ;
+     rdfs:label "CPU compute (Requirement Classification)" .
 
 
 ###  http://www.physics-h2020.eu/physics/dataDeletionTime
@@ -641,12 +714,45 @@ Examples include:
            rdfs:label "Function has Finalization Code"@en .
 
 
+###  http://www.physics-h2020.eu/physics/fsreads
+:fsreads rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :ResourceRequirementsClassification ;
+         rdfs:range :classificationGrade ;
+         rdfs:label "File System Read Operations (Requirement Classification)" .
+
+
+###  http://www.physics-h2020.eu/physics/fswrites
+:fswrites rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :ResourceRequirementsClassification ;
+          rdfs:range :classificationGrade ;
+          rdfs:label "File System Write Operations (Requirement Classification)" .
+
+
 ###  http://www.physics-h2020.eu/physics/funcCode
 :funcCode rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :Function ;
           rdfs:range xsd:string ;
           rdfs:label "Function has Code"@en .
+
+
+###  http://www.physics-h2020.eu/physics/globalStartTime
+:globalStartTime rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:dateTimeStamp ;
+                 rdfs:label "Global Start Time" .
+
+
+###  http://www.physics-h2020.eu/physics/gpu
+:gpu rdf:type owl:DatatypeProperty ,
+              owl:FunctionalProperty ;
+     rdfs:domain :ResourceRequirementsClassification ;
+     rdfs:range :classificationGrade ;
+     rdfs:comment "This property-value pair exists only if the applications or components with this classification require a GPU to function." ;
+     rdfs:label "GPU compute (Requirement Classification)" .
 
 
 ###  http://www.physics-h2020.eu/physics/hasHttpMethod
@@ -727,6 +833,15 @@ Note: This SHOULD BE INFERRED BY A RULE that finds the top-level composite Appli
        rdfs:label "has Label"@en .
 
 
+###  http://www.physics-h2020.eu/physics/launchGeneratorDelay
+:launchGeneratorDelay rdf:type owl:DatatypeProperty ,
+                               owl:FunctionalProperty ;
+                      rdfs:domain :LoadGenerationData ;
+                      rdfs:range xsd:float ,
+                                 xsd:integer ;
+                      rdfs:label "Launch Generator Delay" .
+
+
 ###  http://www.physics-h2020.eu/physics/maximizeReusableState
 :maximizeReusableState rdf:type owl:DatatypeProperty ;
                        rdfs:domain [ rdf:type owl:Class ;
@@ -741,6 +856,19 @@ Indicate whether a function has reusable context (e.g. database connection) that
                        rdfs:label "Annotation: Flow or Function maximizes Reusable State"@en .
 
 
+###  http://www.physics-h2020.eu/physics/memory
+:memory rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain [ rdf:type owl:Class ;
+                      owl:unionOf ( :LoadGenerationData
+                                    :ResourceRequirementsClassification
+                                  )
+                    ] ;
+        rdfs:range :classificationGrade ,
+                   xsd:integer ;
+        rdfs:label "Memory" .
+
+
 ###  http://www.physics-h2020.eu/physics/metricEndpoint
 :metricEndpoint rdf:type owl:DatatypeProperty ;
                 rdfs:domain :Application ;
@@ -753,6 +881,22 @@ Otherwise it is automatically found by the reasoning engine.
 
 This metric can be used by auto-scaling approaches or other management strategies in the PHYSICS platform"""@en ;
                 rdfs:label "Annotation: Application has Metric Endpoint"@en .
+
+
+###  http://www.physics-h2020.eu/physics/networkreceived
+:networkreceived rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :ResourceRequirementsClassification ;
+                 rdfs:range :classificationGrade ;
+                 rdfs:label "Network Traffic Received (Requirement Classification)" .
+
+
+###  http://www.physics-h2020.eu/physics/networktransmitted
+:networktransmitted rdf:type owl:DatatypeProperty ,
+                             owl:FunctionalProperty ;
+                    rdfs:domain :ResourceRequirementsClassification ;
+                    rdfs:range :classificationGrade ;
+                    rdfs:label "Network Traffic Transmitted (Requirement Classification)" .
 
 
 ###  http://www.physics-h2020.eu/physics/qosMetricEndpoint
@@ -770,6 +914,24 @@ This metric can be used by auto-scaling approaches or other management strategie
              rdfs:label "Annotation: Application has global Replication"@en .
 
 
+###  http://www.physics-h2020.eu/physics/sampleNumber
+:sampleNumber rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :LoadGenerationData ;
+              rdfs:range xsd:float ,
+                         xsd:integer ;
+              rdfs:label "Sample Number" .
+
+
+###  http://www.physics-h2020.eu/physics/setRate
+:setRate rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :LoadGenerationData ;
+         rdfs:range xsd:double ,
+                    xsd:float ;
+         rdfs:label "Set Rate" .
+
+
 ###  http://www.physics-h2020.eu/physics/sizingGB
 :sizingGB rdf:type owl:DatatypeProperty ;
           rdfs:domain :Application ;
@@ -781,6 +943,59 @@ Can be used to describe the size of the container for a function, but needs to c
 
 SHORTCUT for Application Requirements creation, enacted in reasoning."""@en ;
           rdfs:label "Annotation: Application has Container Size (GB)"@en .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevDuration
+:stdDevDuration rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :LoadGenerationData ;
+                rdfs:range xsd:float ;
+                rdfs:label "Standdard Deviation of Duration" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevInitTime
+:stdDevInitTime rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :LoadGenerationData ;
+                rdfs:range xsd:float ,
+                           xsd:integer ;
+                rdfs:label "Standard Deviation of Initialization Time" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevStartLatency
+:stdDevStartLatency rdf:type owl:DatatypeProperty ,
+                             owl:FunctionalProperty ;
+                    rdfs:domain :LoadGenerationData ;
+                    rdfs:range xsd:float ,
+                               xsd:integer ;
+                    rdfs:label "Standard Deviation of Start Latency" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevUserSideDelay
+:stdDevUserSideDelay rdf:type owl:DatatypeProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :LoadGenerationData ;
+                     rdfs:range xsd:float ,
+                                xsd:integer ;
+                     rdfs:label "Standard Deviation of User Side Delay" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevWaitTime
+:stdDevWaitTime rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :LoadGenerationData ;
+                rdfs:range xsd:float ,
+                           xsd:integer ;
+                rdfs:label "Standard Deviation of Wait Time" .
+
+
+###  http://www.physics-h2020.eu/physics/successPercentage
+:successPercentage rdf:type owl:DatatypeProperty ,
+                            owl:FunctionalProperty ;
+                   rdfs:domain :LoadGenerationData ;
+                   rdfs:range xsd:float ,
+                              xsd:integer ;
+                   rdfs:label "Success Percentage" .
 
 
 ###  http://www.physics-h2020.eu/physics/swaggerDoc
@@ -1707,4 +1922,4 @@ wfdesc:Workflow rdfs:label "wfdesc: Workflow"@en .
 ] .
 
 
-###  Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
