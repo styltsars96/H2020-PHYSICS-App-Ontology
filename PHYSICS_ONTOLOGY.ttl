@@ -17,6 +17,18 @@
 #    Datatypes
 #################################################################
 
+###  http://www.physics-h2020.eu/physics/classificationGrade
+:classificationGrade rdf:type rdfs:Datatype ;
+                     rdfs:comment """A string. It is the classification label that denotes a grade, e.g. of resource requirements.
+Possible values:
+- \"low\"
+- \"medium\"
+- \"high\"
+- \"very high\"""" ;
+                     rdfs:label "physics:classificationGrade" ;
+                     owl:equivalentClass xsd:string .
+
+
 ###  http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON
 rdf:JSON rdf:type rdfs:Datatype .
 
@@ -34,6 +46,33 @@ rdf:JSON rdf:type rdfs:Datatype .
 There can be 1 or more supported Execution modes for an Application individual. 
 Notice: Like other properties, a definition like this on a sub-component overrides the generic definition."""@en ;
                   rdfs:label "Application has Execution Mode"@en .
+
+
+###  http://www.physics-h2020.eu/physics/applicationBenchmark
+:applicationBenchmark rdf:type owl:ObjectProperty ,
+                               owl:FunctionalProperty ,
+                               owl:InverseFunctionalProperty ;
+                      rdfs:domain :Application ;
+                      rdfs:range :PerformanceBenchmark ;
+                      rdfs:label "Application has latest Benchmark" .
+
+
+###  http://www.physics-h2020.eu/physics/benchmarkData
+:benchmarkData rdf:type owl:ObjectProperty ,
+                        owl:FunctionalProperty ,
+                        owl:InverseFunctionalProperty ;
+               rdfs:domain :PerformanceBenchmark ;
+               rdfs:range :LoadGenerationData ;
+               rdfs:label "Benchmark has Load Generation Data" .
+
+
+###  http://www.physics-h2020.eu/physics/benchmarkProfile
+:benchmarkProfile rdf:type owl:ObjectProperty ,
+                           owl:FunctionalProperty ,
+                           owl:InverseFunctionalProperty ;
+                  rdfs:domain :PerformanceBenchmark ;
+                  rdfs:range :PerformanceProfile ;
+                  rdfs:label "Benchmark results in Performance profile" .
 
 
 ###  http://www.physics-h2020.eu/physics/callsDependency
@@ -375,6 +414,33 @@ Dumb Example: An echo endpoint is created, and returns what it gets, by having R
                 rdfs:label "App Interface is Output of Node"@en .
 
 
+###  http://www.physics-h2020.eu/physics/loadGenData
+:loadGenData rdf:type owl:ObjectProperty ;
+             rdfs:domain :Application ;
+             rdfs:range :LoadGenerationData ;
+             rdfs:comment "Application has a set of scalar results and input parameters, that result from THE LATEST performance benchmark, at A SPECIFIC LOCATION/LOCALITY!" ;
+             rdfs:label "Application has Load Generation Data" .
+
+
+###  http://www.physics-h2020.eu/physics/location
+:location rdf:type owl:ObjectProperty ;
+          rdfs:domain [ rdf:type owl:Class ;
+                        owl:unionOf ( :Application
+                                      :LoadGenerationData
+                                      :PerformanceBenchmark
+                                      :PerformanceProfile
+                                    )
+                      ] ;
+          rdfs:range [ rdf:type owl:Class ;
+                       owl:unionOf ( :Locality
+                                     :Resource
+                                   )
+                     ] ;
+          rdfs:comment """Application is instantiated at a location/locality/resource.
+Its Performance Benchmarks and related entities are also at that location.""" ;
+          rdfs:label "Application Instance (and its Measurements) is located at Locality/Resource" .
+
+
 ###  http://www.physics-h2020.eu/physics/manages
 :manages rdf:type owl:ObjectProperty ;
          rdfs:domain :Management ;
@@ -404,6 +470,13 @@ Management Entities include management systems, orchestrators, operations suppor
                  rdfs:label "manages Resource"@en .
 
 
+###  http://www.physics-h2020.eu/physics/oldApplicationBenchmark
+:oldApplicationBenchmark rdf:type owl:ObjectProperty ;
+                         rdfs:domain :Application ;
+                         rdfs:range :PerformanceBenchmark ;
+                         rdfs:label "Application has old Benchmark" .
+
+
 ###  http://www.physics-h2020.eu/physics/partOfCluster
 :partOfCluster rdf:type owl:ObjectProperty ,
                         owl:FunctionalProperty ;
@@ -412,12 +485,31 @@ Management Entities include management systems, orchestrators, operations suppor
                rdfs:label "Compute Node is part of Cluster"@en .
 
 
+###  http://www.physics-h2020.eu/physics/performanceProfile
+:performanceProfile rdf:type owl:ObjectProperty ;
+                    rdfs:domain :Application ;
+                    rdfs:range :PerformanceProfile ;
+                    rdfs:comment """The Application / App component has a Performance Profile.
+This performance profile is the result of the LATEST BENCHMARK, for A SPECIFIC LOCATION/Locality, for the given Application!""" ;
+                    rdfs:label "Application has Performance Profile" .
+
+
 ###  http://www.physics-h2020.eu/physics/preparesRESTResponseFor
 :preparesRESTResponseFor rdf:type owl:ObjectProperty ;
                          rdfs:domain :RESTOutput ;
                          rdfs:range :REST ;
                          rdfs:comment "An output may prepare response to one or more exposed REST APIs. Has to be found by a reasoning rule."@en ;
                          rdfs:label "Output Prepares Response For REST API"@en .
+
+
+###  http://www.physics-h2020.eu/physics/resources
+:resources rdf:type owl:ObjectProperty ,
+                    owl:FunctionalProperty ,
+                    owl:InverseFunctionalProperty ;
+           rdfs:domain :PerformanceProfile ;
+           rdfs:range :ResourceRequirementsClassification ;
+           rdfs:comment "The resource requirements classification assigned to the performance profile of a given Application / Application Benchmark" ;
+           rdfs:label "Performance Profile defines Resource Requirements" .
 
 
 ###  http://www.physics-h2020.eu/physics/serverlessDeployedOn
@@ -478,11 +570,72 @@ Management Entities include management systems, orchestrators, operations suppor
 #    Data properties
 #################################################################
 
+###  http://www.physics-h2020.eu/physics/achievedAverageRate
+:achievedAverageRate rdf:type owl:DatatypeProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :LoadGenerationData ;
+                     rdfs:range xsd:float ,
+                                xsd:integer ;
+                     rdfs:label "Achieved Average Rate" .
+
+
 ###  http://www.physics-h2020.eu/physics/allowsUpload
 :allowsUpload rdf:type owl:DatatypeProperty ;
               rdfs:domain :REST ;
               rdfs:range xsd:boolean ;
               rdfs:label "REST API allows Upload"@en .
+
+
+###  http://www.physics-h2020.eu/physics/averageDuration
+:averageDuration rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:float ,
+                            xsd:integer ;
+                 rdfs:label "Average Duration" .
+
+
+###  http://www.physics-h2020.eu/physics/averageInitTime
+:averageInitTime rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:float ;
+                 rdfs:label "Average Initialization Time" .
+
+
+###  http://www.physics-h2020.eu/physics/averageStartLatency
+:averageStartLatency rdf:type owl:DatatypeProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :LoadGenerationData ;
+                     rdfs:range xsd:float ,
+                                xsd:integer ;
+                     rdfs:label "Average Start Latency" .
+
+
+###  http://www.physics-h2020.eu/physics/averageUserSideDelay
+:averageUserSideDelay rdf:type owl:DatatypeProperty ,
+                               owl:FunctionalProperty ;
+                      rdfs:domain :LoadGenerationData ;
+                      rdfs:range xsd:float ,
+                                 xsd:integer ;
+                      rdfs:label "Average User Side Delay" .
+
+
+###  http://www.physics-h2020.eu/physics/averageWaitTime
+:averageWaitTime rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:float ,
+                            xsd:integer ;
+                 rdfs:label "Average Wait Time" .
+
+
+###  http://www.physics-h2020.eu/physics/benchmarkTimestamp
+:benchmarkTimestamp rdf:type owl:DatatypeProperty ;
+                    rdfs:domain :PerformanceBenchmark ;
+                    rdfs:range xsd:dateTime ,
+                               xsd:dateTimeStamp ;
+                    rdfs:label "Benchmark has Timestamp" .
 
 
 ###  http://www.physics-h2020.eu/physics/cloudAPIVersion
@@ -503,6 +656,14 @@ Examples include:
 - Importing a Software Library, or even Framework, as a single symbol/keyword in code.
 - References to other files or URIs or entire entities through code."""@en ;
             rdfs:label "Instance is represented as Symbol in Code"@en .
+
+
+###  http://www.physics-h2020.eu/physics/cpu
+:cpu rdf:type owl:DatatypeProperty ,
+              owl:FunctionalProperty ;
+     rdfs:domain :ResourceRequirementsClassification ;
+     rdfs:range :classificationGrade ;
+     rdfs:label "CPU compute (Requirement Classification)" .
 
 
 ###  http://www.physics-h2020.eu/physics/dataDeletionTime
@@ -553,12 +714,45 @@ Examples include:
            rdfs:label "Function has Finalization Code"@en .
 
 
+###  http://www.physics-h2020.eu/physics/fsreads
+:fsreads rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :ResourceRequirementsClassification ;
+         rdfs:range :classificationGrade ;
+         rdfs:label "File System Read Operations (Requirement Classification)" .
+
+
+###  http://www.physics-h2020.eu/physics/fswrites
+:fswrites rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :ResourceRequirementsClassification ;
+          rdfs:range :classificationGrade ;
+          rdfs:label "File System Write Operations (Requirement Classification)" .
+
+
 ###  http://www.physics-h2020.eu/physics/funcCode
 :funcCode rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :Function ;
           rdfs:range xsd:string ;
           rdfs:label "Function has Code"@en .
+
+
+###  http://www.physics-h2020.eu/physics/globalStartTime
+:globalStartTime rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :LoadGenerationData ;
+                 rdfs:range xsd:dateTimeStamp ;
+                 rdfs:label "Global Start Time" .
+
+
+###  http://www.physics-h2020.eu/physics/gpu
+:gpu rdf:type owl:DatatypeProperty ,
+              owl:FunctionalProperty ;
+     rdfs:domain :ResourceRequirementsClassification ;
+     rdfs:range :classificationGrade ;
+     rdfs:comment "This property-value pair exists only if the applications or components with this classification require a GPU to function." ;
+     rdfs:label "GPU compute (Requirement Classification)" .
 
 
 ###  http://www.physics-h2020.eu/physics/hasHttpMethod
@@ -639,6 +833,15 @@ Note: This SHOULD BE INFERRED BY A RULE that finds the top-level composite Appli
        rdfs:label "has Label"@en .
 
 
+###  http://www.physics-h2020.eu/physics/launchGeneratorDelay
+:launchGeneratorDelay rdf:type owl:DatatypeProperty ,
+                               owl:FunctionalProperty ;
+                      rdfs:domain :LoadGenerationData ;
+                      rdfs:range xsd:float ,
+                                 xsd:integer ;
+                      rdfs:label "Launch Generator Delay" .
+
+
 ###  http://www.physics-h2020.eu/physics/maximizeReusableState
 :maximizeReusableState rdf:type owl:DatatypeProperty ;
                        rdfs:domain [ rdf:type owl:Class ;
@@ -653,6 +856,19 @@ Indicate whether a function has reusable context (e.g. database connection) that
                        rdfs:label "Annotation: Flow or Function maximizes Reusable State"@en .
 
 
+###  http://www.physics-h2020.eu/physics/memory
+:memory rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain [ rdf:type owl:Class ;
+                      owl:unionOf ( :LoadGenerationData
+                                    :ResourceRequirementsClassification
+                                  )
+                    ] ;
+        rdfs:range :classificationGrade ,
+                   xsd:integer ;
+        rdfs:label "Memory" .
+
+
 ###  http://www.physics-h2020.eu/physics/metricEndpoint
 :metricEndpoint rdf:type owl:DatatypeProperty ;
                 rdfs:domain :Application ;
@@ -665,6 +881,22 @@ Otherwise it is automatically found by the reasoning engine.
 
 This metric can be used by auto-scaling approaches or other management strategies in the PHYSICS platform"""@en ;
                 rdfs:label "Annotation: Application has Metric Endpoint"@en .
+
+
+###  http://www.physics-h2020.eu/physics/networkreceived
+:networkreceived rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty ;
+                 rdfs:domain :ResourceRequirementsClassification ;
+                 rdfs:range :classificationGrade ;
+                 rdfs:label "Network Traffic Received (Requirement Classification)" .
+
+
+###  http://www.physics-h2020.eu/physics/networktransmitted
+:networktransmitted rdf:type owl:DatatypeProperty ,
+                             owl:FunctionalProperty ;
+                    rdfs:domain :ResourceRequirementsClassification ;
+                    rdfs:range :classificationGrade ;
+                    rdfs:label "Network Traffic Transmitted (Requirement Classification)" .
 
 
 ###  http://www.physics-h2020.eu/physics/qosMetricEndpoint
@@ -682,6 +914,24 @@ This metric can be used by auto-scaling approaches or other management strategie
              rdfs:label "Annotation: Application has global Replication"@en .
 
 
+###  http://www.physics-h2020.eu/physics/sampleNumber
+:sampleNumber rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :LoadGenerationData ;
+              rdfs:range xsd:float ,
+                         xsd:integer ;
+              rdfs:label "Sample Number" .
+
+
+###  http://www.physics-h2020.eu/physics/setRate
+:setRate rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :LoadGenerationData ;
+         rdfs:range xsd:double ,
+                    xsd:float ;
+         rdfs:label "Set Rate" .
+
+
 ###  http://www.physics-h2020.eu/physics/sizingGB
 :sizingGB rdf:type owl:DatatypeProperty ;
           rdfs:domain :Application ;
@@ -693,6 +943,59 @@ Can be used to describe the size of the container for a function, but needs to c
 
 SHORTCUT for Application Requirements creation, enacted in reasoning."""@en ;
           rdfs:label "Annotation: Application has Container Size (GB)"@en .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevDuration
+:stdDevDuration rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :LoadGenerationData ;
+                rdfs:range xsd:float ;
+                rdfs:label "Standdard Deviation of Duration" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevInitTime
+:stdDevInitTime rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :LoadGenerationData ;
+                rdfs:range xsd:float ,
+                           xsd:integer ;
+                rdfs:label "Standard Deviation of Initialization Time" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevStartLatency
+:stdDevStartLatency rdf:type owl:DatatypeProperty ,
+                             owl:FunctionalProperty ;
+                    rdfs:domain :LoadGenerationData ;
+                    rdfs:range xsd:float ,
+                               xsd:integer ;
+                    rdfs:label "Standard Deviation of Start Latency" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevUserSideDelay
+:stdDevUserSideDelay rdf:type owl:DatatypeProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :LoadGenerationData ;
+                     rdfs:range xsd:float ,
+                                xsd:integer ;
+                     rdfs:label "Standard Deviation of User Side Delay" .
+
+
+###  http://www.physics-h2020.eu/physics/stdDevWaitTime
+:stdDevWaitTime rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :LoadGenerationData ;
+                rdfs:range xsd:float ,
+                           xsd:integer ;
+                rdfs:label "Standard Deviation of Wait Time" .
+
+
+###  http://www.physics-h2020.eu/physics/successPercentage
+:successPercentage rdf:type owl:DatatypeProperty ,
+                            owl:FunctionalProperty ;
+                   rdfs:domain :LoadGenerationData ;
+                   rdfs:range xsd:float ,
+                              xsd:integer ;
+                   rdfs:label "Success Percentage" .
 
 
 ###  http://www.physics-h2020.eu/physics/swaggerDoc
@@ -1085,6 +1388,14 @@ This class is a high-level abstraction of all kinds of Instances."""@en ;
              rdfs:label "Linux Distribution"@en .
 
 
+###  http://www.physics-h2020.eu/physics/LoadGenerationData
+:LoadGenerationData rdf:type owl:Class ;
+                    rdfs:comment """A collection of data points regarding an application's / app component's performance benchmark at a specific location.
+
+These data points are mainly scalar results, but may also include some input parameters, and also the location.""" ;
+                    rdfs:label "Load Generation Data" .
+
+
 ###  http://www.physics-h2020.eu/physics/Locality
 :Locality rdf:type owl:Class ;
           rdfs:comment "Resource Locality, e.g. the region of a Data Center or the location/area of an Edge or Service Island. When it comes to Applications, it means the locality the deployable item requires, in terms of region, or named network."@en ;
@@ -1178,8 +1489,25 @@ The optimization goals that an Application requires or a Resource provides shoul
 ###  http://www.physics-h2020.eu/physics/PerformanceBenchmark
 :PerformanceBenchmark rdf:type owl:Class ;
                       rdfs:subClassOf irao:Benchmark ;
-                      rdfs:comment "A Performance Benchmark is done so as to be able to predict, assess and compare the Performance of Applications deployed on Resources."@en ;
+                      rdfs:comment """A Performance Benchmark is done so as to be able to predict, assess and compare the Performance of Applications deployed on Resources.
+
+The performance Benchmark of interest is the LATEST benchmark done in A GIVEN LOCALITY/LOCATION, for a SPECIFIC APPLICATION or APP COMPONENT!
+
+A performance benchmark has:
+- Load Generation Data: The scalar results and input values of interest for the application's standard load generation.
+- Performance profile: The categorization of the application in terms of Resource requirements, at a specific location.
+
+Rule: One performance benchmark can be defined for a tuple of (Application, Location/Locality, Time)
+The benchmark of interest, the one mainly associated with the application/app component, is always the latest, as the values MAY change."""@en ;
                       rdfs:label "Performance Benchmark"@en .
+
+
+###  http://www.physics-h2020.eu/physics/PerformanceProfile
+:PerformanceProfile rdf:type owl:Class ;
+                    rdfs:comment """The performance profile given to an Application instance or Application component as a result of its performance benchmark and given its standard load generation.
+
+This profile is for a benchmark done on given location and for a specific application / app component.""" ;
+                    rdfs:label "Performance Profile" .
 
 
 ###  http://www.physics-h2020.eu/physics/PhysicalComputeNode
@@ -1281,6 +1609,14 @@ This can be one of the following: \"Raw Computational Resource\", \"Locality\", 
 
 Such management entities include Cloud platforms (through Cloud API), Hypervisors (through native API), MaaS (through its MaaS API), Network Controllers and Management Systems (through Northbound APIs) etc."""@en ;
                     rdfs:label "Resource Management Entity"@en .
+
+
+###  http://www.physics-h2020.eu/physics/ResourceRequirementsClassification
+:ResourceRequirementsClassification rdf:type owl:Class ;
+                                    rdfs:comment """A set of resource requirement classifications expressed as levels for each kind of resource.
+
+e.g. cpu: low, fsreads: high, etc.""" ;
+                                    rdfs:label "Resource Requirements Classification" .
 
 
 ###  http://www.physics-h2020.eu/physics/Runtime
@@ -1558,6 +1894,12 @@ This class is a high-level abstraction of all kinds of Templates for Instances."
 :SourcePackage rdf:type owl:NamedIndividual ,
                         :SoftwareArtifactType ;
                rdfs:label "Source Code Package"@en .
+
+
+###  http://www.physics-h2020.eu/physics/aws
+:aws rdf:type owl:NamedIndividual ,
+              :AWS ;
+     rdfs:label "Default AWS Cloud Service of PHYSICS" .
 
 
 #################################################################
